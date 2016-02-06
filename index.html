@@ -36,11 +36,11 @@
     /* Height / width / positioning can be customized for your use case.
        For demo purposes, we make the user list 175px and firepad fill the rest of the page. */
     #userlist {
-      position: absolute; left: 0; top: 100px; bottom: 0; height: 500px;
+      position: absolute; right:450px; top: 100px; bottom: 0; height: 500px;
       width: 175px;
     }
     #firepad {
-      position: absolute; left: 175px; top: 100px; bottom: 0; right: 0; height: 500px; width:600px;
+      position: absolute; left: 0px; top: 100px; bottom: 0; right: 450px; height: 500px; width:600px;
     }
     .powered-by-firepad{
     	visibility: hidden;
@@ -53,34 +53,52 @@
  -->
      <!-- Header -->
     <header id="top" class="header">
-        <div class="text-center">
-            <div class="container-fluid">
-            <div class="row">
-              <div class="col-lg-4"></div>
-              <div class="col-lg-4">
-              <button type="button" id="start_button" onclick="startButton(event)" class="btn btn-default">
-                Start Recording
-              </button>
-              <div id="results">
-                <span id="final_span" class="final"></span>
-                <span id="interim_span" class="interim"></span>                
-              </div>
-              </div>                
-              <div class="col-lg-4"></div>
-            </div>
-            <div class="row">
-              <div class="col-lg-4"></div>
-              <div class="col-lg-4">
-                <div id="userlist"></div>
-                <div id="firepad"></div>
-              </div>
-              <div class="col-lg-4"></div>
-              </div>
-            </div>
-            </div>
-        </div>
-    </header>
+        <div class="text-center panel panel-default">
+            <div class="panel-body">
+                <div class="container-fluid">
+                    <div class="row">
+                      <div class="col-lg-4"></div>
+                      <div class="col-lg-4">
+                      <input type="button" id="start_button" onclick="startButton(event)" class="btn btn-success" value="Start Recording"/>
+                      </div>                
+                      <div class="col-lg-4"></div>
+                    </div>
+                    <div class="row">
+                      <div class="col-lg-4"></div>
+                      <div class="col-lg-4" id="results">
+                            <span id="final_span" class="final"></span>
+                            <span id="interim_span" class="interim"></span>                
+                      </div>
+                      <div class="col-lg-4"></div>
+                    </div>
+                    <div class="row">
+                      <div class="col-lg-4"></div>
+                      <div class="col-lg-4 firepad-container">
+                        <div id="userlist" class="firepad-userlist"></div>
+                        <div id="firepad" class="firepad firepad-with-toolbar" style="background-color:white;"></div>
+                      </div>
+                      <div class="col-lg-4"></div>
 
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default text-center" style="position:absolute; min-width:250px; right:10px;">
+                <div class="panel-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="list-group">
+                                     <a href="#" class="list-group-item active">Entities</a>
+                                     <div class="_items">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </header>
 
 
   <script>
@@ -246,11 +264,6 @@ setInterval(function() {
 			</div>
 			<div class="row" style="position:absolute; top: 650px;">
 				<div class="col-md-12">
-					<div class="list-group">
-						 <a href="#" class="list-group-item active">Entities</a>
-						 <div class="_items">
-						</div>
-					</div>
 				</div>
 			</div>
 		</div>
@@ -350,8 +363,16 @@ function capitalize(s) {
 
 function startButton(event) {
   if (recognizing) {
+    $("#start_button").attr("value", "Start Recording");
+    $("#start_button").addClass("btn-success");
+    $("#start_button").removeClass("btn-danger");
     recognition.stop();
     return;
+  }
+  else {
+    $("#start_button").removeClass("btn-success");
+    $("#start_button").addClass("btn-danger");
+    $("#start_button").attr("value", "Stop Recording");
   }
   final_transcript = '';
   recognition.lang = 'en-US';
