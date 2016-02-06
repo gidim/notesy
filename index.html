@@ -108,7 +108,9 @@
     firepad = 'none';
     function init() {
       //// Initialize Firebase.
-      var firepadRef =  new Firebase('https://flickering-inferno-2935.firebaseio.com/class');
+      // var firepadRef =  new Firebase('https://flickering-inferno-2935.firebaseio.com/class');
+      var firepadRef = getExampleRef();
+
       // TODO: Replace above line with:
       // var firepadRef = new Firebase('<YOUR FIREBASE URL>');
       //// Create CodeMirror (with lineWrapping on).
@@ -184,7 +186,7 @@ setInterval(function() {
     		if(!final_interm.endsWith(" "))
     			final_interm += " "
     		fullText = fullText.splice(leftIndex,0,final_interm);
-    		firepad.setText(fullText);
+    		setTextWithCursor(fullText);
     	}
 
 
@@ -199,8 +201,19 @@ setInterval(function() {
 		     	 	beforeInterim = fullText.substring(0,leftIndex)
 	    	 	afterInterim = fullText.substring(rightIndex+2)
 	    		newFullText = beforeInterim + afterInterim
-	    		firepad.setText(newFullText);
+	    		setTextWithCursor(newFullText);
 	     	 }
+
+    }
+
+
+    function setTextWithCursor(newText){
+
+      cursorTop = $("textarea").parent().css("top");
+      cursorLeft = $("textarea").parent().css("left");
+      firepad.setText(newText);
+      $("textarea").parent().css("top",cursorTop);
+      $("textarea").parent().css("left",cursorLeft);
 
     }
 
@@ -242,7 +255,7 @@ setInterval(function() {
     		newFullText = beforeInterim + LeftSign + newText + RightSign + afterInterim
 		}
 
-    	firepad.setText(newFullText);
+    	setTextWithCursor(newFullText);
     }
 
 
