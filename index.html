@@ -166,7 +166,7 @@ setInterval(function() {
     		if(!final_interm.endsWith(" "))
     			final_interm += " "
     		fullText = fullText.splice(leftIndex,0,final_interm);
-    		firepad.setText(fullText);
+    		setTextWithCursor(fullText);
     	}
 
 
@@ -181,8 +181,19 @@ setInterval(function() {
 		     	 	beforeInterim = fullText.substring(0,leftIndex)
 	    	 	afterInterim = fullText.substring(rightIndex+2)
 	    		newFullText = beforeInterim + afterInterim
-	    		firepad.setText(newFullText);
+	    		setTextWithCursor(newFullText);
 	     	 }
+
+    }
+
+
+    function setTextWithCursor(newText){
+
+      cursorTop = $("textarea").parent().css("top");
+      cursorLeft = $("textarea").parent().css("left");
+      firepad.setText(newText);
+      $("textarea").parent().css("top",cursorTop);
+      $("textarea").parent().css("left",cursorLeft);
 
     }
 
@@ -224,7 +235,7 @@ setInterval(function() {
     		newFullText = beforeInterim + LeftSign + newText + RightSign + afterInterim
 		}
 
-    	firepad.setText(newFullText);
+    	setTextWithCursor(newFullText);
     }
 
 
