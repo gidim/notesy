@@ -88,7 +88,9 @@
     firepad = 'none';
     function init() {
       //// Initialize Firebase.
-      var firepadRef =  new Firebase('https://flickering-inferno-2935.firebaseio.com/class');
+      // var firepadRef =  new Firebase('https://flickering-inferno-2935.firebaseio.com/class');
+      var firepadRef = getExampleRef();
+
       // TODO: Replace above line with:
       // var firepadRef = new Firebase('<YOUR FIREBASE URL>');
       //// Create CodeMirror (with lineWrapping on).
