@@ -59,9 +59,7 @@
                     <div class="row">
                       <div class="col-lg-4"></div>
                       <div class="col-lg-4">
-                      <button type="button" id="start_button" onclick="startButton(event)" class="btn btn-default">
-                        Start Recording
-                      </button>
+                      <input type="button" id="start_button" onclick="startButton(event)" class="btn btn-success" value="Start Recording"/>
                       </div>                
                       <div class="col-lg-4"></div>
                     </div>
@@ -75,9 +73,9 @@
                     </div>
                     <div class="row">
                       <div class="col-lg-4"></div>
-                      <div class="col-lg-4">
-                        <div id="userlist"></div>
-                        <div id="firepad"></div>
+                      <div class="col-lg-4 firepad-container">
+                        <div id="userlist" class="firepad-userlist"></div>
+                        <div id="firepad" class="firepad firepad-with-toolbar"></div>
                       </div>
                       <div class="col-lg-4"></div>
 
@@ -365,8 +363,16 @@ function capitalize(s) {
 
 function startButton(event) {
   if (recognizing) {
+    $("#start_button").attr("value", "Start Recording");
+    $("#start_button").addClass("btn-success");
+    $("#start_button").removeClass("btn-danger");
     recognition.stop();
     return;
+  }
+  else {
+    $("#start_button").removeClass("btn-success");
+    $("#start_button").addClass("btn-danger");
+    $("#start_button").attr("value", "Stop Recording");
   }
   final_transcript = '';
   recognition.lang = 'en-US';
