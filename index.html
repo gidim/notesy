@@ -12,6 +12,10 @@
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
+        <!-- Custom CSS -->
+    <link href="css/stylish-portfolio.css" rel="stylesheet">
+        <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
   <script src="https://cdn.firebase.com/js/client/2.3.2/firebase.js"></script>
 
   <!-- CodeMirror -->
@@ -47,24 +51,37 @@
   <body>
 <!-- <script type='text/javascript' src='//www.bing.com/widget/bootstrap.js' data-visualization='linksandimages' data-carouselstate='expanded' data-strength='aggressive' data-maxlinks='100' data-maxentitylinks='10' data-maxparagraphlinks='20' data-version='1.0b' data-autosnapshot='true' data-id='829a001add0c423c851b167315a8bd8f' data-options='dc=dashblack,cse=1' async></script>
  -->
-    <div class="container-fluid">
-	<div class="row">
-		<div class="col-md-12">
-			<div class="row">
-				<div class="col-md-4">
-					 
-					<button type="button" id="start_button" onclick="startButton(event)" class="btn btn-default">
-						Start Recording
-					</button>
-				</div>
-				<div class="col-md-4">
-				</div>
-				<div class="col-md-4">
-				</div>
-			</div>
-				<div class="">
-		  <div id="userlist"></div>
-			<div id="firepad"></div>
+     <!-- Header -->
+    <header id="top" class="header">
+        <div class="text-center">
+            <div class="container-fluid">
+            <div class="row">
+              <div class="col-lg-4"></div>
+              <div class="col-lg-4">
+              <button type="button" id="start_button" onclick="startButton(event)" class="btn btn-default">
+                Start Recording
+              </button>
+              <div id="results">
+                <span id="final_span" class="final"></span>
+                <span id="interim_span" class="interim"></span>                
+              </div>
+              </div>                
+              <div class="col-lg-4"></div>
+            </div>
+            <div class="row">
+              <div class="col-lg-4"></div>
+              <div class="col-lg-4">
+                <div id="userlist"></div>
+                <div id="firepad"></div>
+              </div>
+              <div class="col-lg-4"></div>
+              </div>
+            </div>
+            </div>
+        </div>
+    </header>
+
+
 
   <script>
 
@@ -119,7 +136,12 @@ lastText = "";
 setInterval(function() {
 	text = firepad.getText().trim();
 	if(text !== lastText && text.length !=0){
-  		getYahooData(text)
+      textChunksArr = text.match(/.{1,100}/g);
+      for(var idx in textChunksArr) {
+        var chunk = textChunksArr[idx];
+        
+      }
+  		getYahooData(text);
   		lastText = text;
   	if(text.length ==0)
   		clearEntities();
@@ -133,9 +155,10 @@ setInterval(function() {
 	};
 
     function updateFinal(){
-    	final_interm = $("#final_span").text();
-    	if(final_interm.length !== 0){
-    		$("#final_span").text("");
+    	final_interm = final_span.innerHTML;
+      final_transcript = "";
+      final_span.innerHTML = "";
+    	if(final_interm.length !== 0){    		
     		var fullText = firepad.getText();
     		var leftIndex = fullText.indexOf(LeftSign);
     		if(!final_interm.endsWith(" "))
@@ -206,11 +229,7 @@ setInterval(function() {
   </script>
 			</div>
 			<div>
-			<div id="results">
-  <span id="final_span" class="final"></span>
-  <span id="interim_span" class="interim"></span>
-  <p>
-</div>
+
 			</div>
 			<div class="row" style="position:absolute; top: 650px;">
 				<div class="col-md-12">
@@ -351,28 +370,38 @@ function clearEntities(){
 
 }
 function updateEntities(json){
-	console.log(json)
+	//console.log(json)
 
 	clearEntities();
 
-	resArr = json.query.results.entities.entity
+	resArr = json.query.results.entities
 
-	element = "<div class=\"list-group-item\"><a href=\"http://www.wikipedia.com\"></a></div>"
+  if(resArr != null) {
+    resArr = resArr.entity;
+    if(!(resArr instanceof Array)) {
+      resArr = [resArr];
+    }
+
+    element = "<div class=\"list-group-item\"><a href=\"http://www.wikipedia.com\"></a></div>"
 
     element = jQuery.parseHTML(element)[0];
 
-	for (var i=0; i < resArr.length; i++) {
-		newElement = $(element).clone();
-		newElement.find("a").text(resArr[i].text.content)
+    for (var i=0; i < resArr.length; i++) {
 
-		newElement.find("a").attr("href",resArr[i].wiki_url)
+    	newElement = $(element).clone();
+    	newElement.find("a").text(resArr[i].text.content)
 
-		//newElement.find('h5').html(resArr[i].text.content);
-		container.append(newElement)
-	  	console.log(resArr[i]);
-	}
+      var curr_url = resArr[i].wiki_url;
+      if(!curr_url) {
+        curr_url = "https://www.google.com/webhp?hl=en#hl=en&q=" + resArr[i].text.content.split(" ").join("+");
+      }
+    	newElement.find("a").attr("href",curr_url);
 
+    	//newElement.find('h5').html(resArr[i].text.content);
+    	container.append(newElement)      
+    }
 
+}
 
 
 
@@ -380,9 +409,11 @@ function updateEntities(json){
 }
 function getYahooData(text){
 
-
-	var query = 'select * from contentanalysis.analyze where text=\'' + text + '\';'
-	data = $.get( "//query.yahooapis.com/v1/public/yql", {
+  if(text.length < 3) {
+    return;
+  }
+	var query = 'select * from contentanalysis.analyze where text="' + text.replace(/[^\w\s]/gi, '') + '";'
+	data = $.post( "http://query.yahooapis.com/v1/public/yql", {
 	 q: query,
 	 format: 'json'
 	})
@@ -390,7 +421,10 @@ function getYahooData(text){
 	  	var str = JSON.stringify(data, null, 2); // spacing level = 2
 	  	updateEntities(data)
 	    //console.log( "Data Loaded: " + str );
-	  });
+	  })
+    .fail(function(err) {
+      console.log(err);
+    });
  } 
 
 </script>
