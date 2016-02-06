@@ -1,1 +1,57 @@
-# Empty CSS file for your own CSS
+
+    /* Height / width / positioning can be customized for your use case.
+       For demo purposes, we make the user list 175px and firepad fill the rest of the page. */
+    
+     body{
+     	background-image: url("../img/bg.jpg");
+     }
+     h5{
+     	font-size: 11px;
+     	margin-top: 0px;
+
+     }
+     blockquote{
+     	border-left:none;
+     }
+    #userlist {
+
+    }
+    #firepad {
+    	height:600px;
+
+    }
+    .powered-by-firepad{
+    	visibility: hidden;
+    }
+
+	.firepad-userlist{
+		height:510px !important;
+		min-width:0px !important;
+	}
+	.firepad-userlist-users{
+		background-color: #ECECEC
+	}
+	#usersPanel{
+		padding:0px;
+	}
+	.firepad-userlist-heading{
+		visibility: hidden;
+	}
+
+.firepad-userlist-user{
+	height:40px !important;
+}
+    #logo{
+		width:100%;
+    }
+
+    .panel{
+
+    }
+    .container-fluid{
+    	max-width:1100px;
+    }
+
+	#editorContainer{
+		padding:0px !important;
+	}
