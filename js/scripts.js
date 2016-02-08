@@ -250,6 +250,7 @@ function startButton(event) {
     $("#start_button").attr("value", "Start Recording");
     $("#start_button").addClass("btn-success");
     $("#start_button").removeClass("btn-danger");
+    $("#rec-anim").attr("hidden", "");
     recognition.stop();
     return;
   }
@@ -257,6 +258,7 @@ function startButton(event) {
     $("#start_button").removeClass("btn-success");
     $("#start_button").addClass("btn-danger");
     $("#start_button").attr("value", "Stop Recording");
+    $("#rec-anim").removeAttr("hidden");
   }
   final_transcript = '';
   recognition.lang = 'en-US';
